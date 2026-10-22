@@ -19,16 +19,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Find the project folder
+        run: |
+          PKG=$(find . -name package.json -not -path '*/node_modules/*' | head -1)
+          echo "APP=$(dirname "$PKG")" >> $GITHUB_ENV
+          echo "Project found in: $(dirname "$PKG")"
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-      - run: npm ci
-      - run: npm run build
+
+      - name: Install and build
+        working-directory: ${{ env.APP }}
+        run: |
+          npm install
+          npm run build
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: ${{ env.APP }}/dist
 
   deploy:
     needs: build
