@@ -1,0 +1,5 @@
+Put your audio files in this folder, e.g.
+
+  made-in-japan.mp3
+
+Then list them in src/data/playlist.js using songs('file-name.mp3').
